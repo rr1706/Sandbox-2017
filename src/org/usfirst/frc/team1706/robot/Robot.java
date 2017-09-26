@@ -944,9 +944,11 @@ public class Robot extends IterativeRobot {
 //			System.out.println("Final: " + FWD);
 			
 			currentRampTime = Time.get();
-			if (FWD != 0 || STR != 0 || RCW != 0) {
-				if (rampRate < 1) {
-					rampRate = Math.abs(currentRampTime - prevRampTime);
+			if (FWD != 0.0 || STR != 0.0 || RCW != 0.0) {
+				if (rampRate < 1.0) {
+					rampRate = currentRampTime - prevRampTime;
+				} else {
+					rampRate = 1.0;
 				}
 				
 				FWD *= rampRate;
