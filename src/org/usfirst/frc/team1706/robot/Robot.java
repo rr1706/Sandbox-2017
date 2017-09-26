@@ -144,9 +144,13 @@ public class Robot extends IterativeRobot {
 	double STR;
 	double RCW;
 	
-	double ramp;
-	double rampClock;
-	double rampClock2;
+//	double ramp;
+//	double rampClock;
+//	double rampClock2;
+	
+	double rampRate = 0;
+	double currentRampTime = 0;
+	double prevRampTime = 0;
 
 	double keepAngle;
 	
@@ -939,6 +943,18 @@ public class Robot extends IterativeRobot {
 //			}
 //			System.out.println("Final: " + FWD);
 			
+			currentRampTime = Time.get();
+			if (FWD != 0 || STR != 0 || RCW != 0) {
+				if (rampRate < 1) {
+					rampRate = Math.abs(currentRampTime - prevRampTime);
+				}
+				
+				FWD *= rampRate;
+				STR *= rampRate;
+				RCW *= rampRate;
+			} else {
+				prevRampTime = currentRampTime;
+			}
 			
 			
 			if (FWD + STR == 0.0) {
