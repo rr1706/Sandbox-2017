@@ -143,6 +143,10 @@ public class Robot extends IterativeRobot {
 	double FWD;
 	double STR;
 	double RCW;
+	
+	double ramp;
+	double rampClock;
+	double rampClock2;
 
 	double keepAngle;
 	
@@ -922,6 +926,21 @@ public class Robot extends IterativeRobot {
 				STR = -1.0;
 			}
 			
+//			if (rampClock == 0.0 && FWD > 0.0){
+//				rampClock = Time.get();
+//				System.out.println("Time: " + rampClock);
+//			} else if(rampClock > 0.0){
+//				rampClock2 = Time.get() - rampClock;
+//				System.out.println("Calculated Time: " + rampClock);
+//				if(rampClock2 > 1.0){
+//					rampClock2 = 1.0;
+//				}
+//				FWD = FWD*Math.pow(rampClock2,3);
+//			}
+//			System.out.println("Final: " + FWD);
+			
+			
+			
 			if (FWD + STR == 0.0) {
 				RCW = XboxController.RStickX();
 			}
@@ -1127,7 +1146,6 @@ public class Robot extends IterativeRobot {
 			if (Gear.getTrigger()) {
 				FWD = Gear.getFWD();
 			}
-			
 			driveTrain.drive(new Vector(STR, FWD), RCW); // x = str, y = fwd, rotation = rcw
 			
 			LED.setRaw(Light.getState());
