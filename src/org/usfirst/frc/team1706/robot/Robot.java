@@ -148,6 +148,7 @@ public class Robot extends IterativeRobot {
 //	double rampClock;
 //	double rampClock2;
 	
+	double wheelRamp = 0;
 	double rampRate = 0;
 	double currentRampTime = 0;
 	double prevRampTime = 0;
@@ -945,16 +946,18 @@ public class Robot extends IterativeRobot {
 			
 			currentRampTime = Time.get();
 			if (FWD != 0.0 || STR != 0.0 || RCW != 0.0) {
-				
-				rampRate = currentRampTime - prevRampTime;
-				
-				if (rampRate > 1.0) {
-					rampRate = 1.0;
+				if (wheelRamp < 1.0) {
+					rampRate = currentRampTime - prevRampTime;
+					
+					//rampRate is x if this is set to a different equation later
+					wheelRamp = rampRate;
+				} else {
+					wheelRamp = 1.0;
 				}
-				
-				FWD *= rampRate;
-				STR *= rampRate;
-				RCW *= rampRate;
+								
+				FWD *= wheelRamp;
+				STR *= wheelRamp;
+				RCW *= wheelRamp;
 			} else {
 				prevRampTime = currentRampTime;
 			}
@@ -1030,6 +1033,7 @@ public class Robot extends IterativeRobot {
 			if (Ds.getBatteryVoltage() <= 9.5 && !LogitechController.LTrig()) {
 				if (currentVoltTime - prevVoltTime > 0.75) {
 					shoot = false;
+					System.out.println("Shooter Voltage Shutoff!");
 				}
 			} else {
 				prevVoltTime = currentVoltTime;
@@ -1117,7 +1121,11 @@ public class Robot extends IterativeRobot {
 			
 			GoalAlign.setPID(SmartDashboard.getNumber("GoalP", 0), SmartDashboard.getNumber("GoalI", 0), 0.0);
 	
-			Climber.run(XboxController.RTrig());
+			if (LogitechController.DPad() != -1) {
+				Climber.run(1.0);
+			} else {
+				Climber.run(XboxController.RTrig());
+			}
 			
 			if (LogitechController.RTrig()) {
 				Feeder.reverse();
@@ -1130,6 +1138,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putNumber("FWD", FWD);
 			SmartDashboard.putNumber("STR", STR);
 			SmartDashboard.putNumber("RCW", RCW);
+			SmartDashboard.putBoolean("Shooter Active", shoot);
 	
 			if (slow) {
 				STR /= 2;

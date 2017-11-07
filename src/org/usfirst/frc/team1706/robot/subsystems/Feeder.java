@@ -29,6 +29,7 @@ public class Feeder {
 		
 		System.out.println(started);
 		
+		//LABEL Feeder Stop
 		if (!LogitechController.RTrig()) {
 			if (!started) {
 				feederWheels.set(-1);
